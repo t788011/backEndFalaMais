@@ -1,52 +1,28 @@
-const express = require('express');
-const router = express.Router();
-const mysql = require('mysql'); // Se estiver usando MySQL
-// Crie a conexão com o banco de dados
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'comunicacao'
-});
+const { Router } = require('express');
+const querys = require('../querys');
+const router = Router();
 
-// Verifica se o usuário é um fonoaudiólogo
-const checkFono = (cpf, password, callback) => {
-  const sql = 'SELECT * FROM cadastrofono WHERE cpf = ? AND password = ?';
-  const values = [cpf, password];
-  pool.query(sql, values, (err, results) => {
-    if (err) return callback(err, null);
-    if (results.length > 0) return callback(null, 'fono');
-    return callback(null, null);
-  });
-};
-
-// Verifica se o usuário é um paciente
-const checkPaciente = (cpf, password, callback) => {
-  const sql = 'SELECT * FROM cadastrarpaciente WHERE cpf = ? AND password = ?';
-  const values = [cpf, password];
-  pool.query(sql, values, (err, results) => {
-    if (err) return callback(err, null);
-    if (results.length > 0) return callback(null, 'paciente');
-    return callback(null, null);
-  });
-};
-
-router.post('/login', (req, res) => {
-    console.log('Recebida requisição POST para /login');
+router.post('/', async (req, res) => { // Use async para lidar com funções assíncronas
+  console.log('Recebida requisição POST para /login');
   const { cpf, password } = req.body;
   console.log(`CPF: ${cpf}, Password: ${password}`);
 
-  checkFono(cpf, password, (err, tipo) => {
-    if (err) return res.status(500).json({ message: 'Erro no servidor' });
-    if (tipo) return res.status(200).json({ tipo });
+  try {
+    const fonoResult = await querys.getFonoByCpf(cpf); // Verifica se é um fono
+    if (fonoResult.length > 0 && fonoResult[0].password === password) {
+      return res.status(200).json({ tipo: 'fono' });
+    }
 
-    checkPaciente(cpf, password, (err, tipo) => {
-      if (err) return res.status(500).json({ message: 'Erro no servidor' });
-      if (tipo) return res.status(200).json({ tipo });
+    const pacienteResult = await querys.getPacienteByCpf(cpf); // Verifica se é um paciente
+    if (pacienteResult.length > 0 && pacienteResult[0].password === password) {
+      return res.status(200).json({ tipo: 'paciente' });
+    }
 
-      res.status(401).json({ message: 'Credenciais inválidas' });
-    });
-  });
+    res.status(401).json({ message: 'Credenciais inválidas' }); // Se não for encontrado nenhum usuário
+  } catch (error) {
+    console.error('Erro ao verificar usuário:', error);
+    res.status(500).json({ message: 'Erro no servidor' });
+  }
 });
 
 module.exports = router;

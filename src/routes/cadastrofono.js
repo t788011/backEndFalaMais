@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const querys = require('../querys');
-
 const router = Router();
 
 router.get('/', async (req, res) => {
