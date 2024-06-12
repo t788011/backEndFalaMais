@@ -2,7 +2,7 @@ const { Router } = require('express');
 const querys = require('../querys');
 const router = Router();
 
-router.post('/', async (req, res) => { // Use async para lidar com funções assíncronas
+router.post('/', async (req, res) => { 
   console.log('Recebida requisição POST para /login');
   const { cpf, password } = req.body;
   console.log(`CPF: ${cpf}, Password: ${password}`);

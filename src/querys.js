@@ -64,7 +64,7 @@ const getFonoByCpf = async (cpf) => {
 
 const getPacienteByCpf = async (cpf) => {
     try {
-        const [query] = await connection.execute('SELECT * FROM cadastrarpaciente WHERE cpf = ?', [cpf]);
+        const [query] = await connection.execute('SELECT * FROM cadastropaciente WHERE cpf = ?', [cpf]);
         return query;
     } catch (error) {
         throw new Error('Erro ao buscar paciente pelo CPF');
@@ -73,7 +73,7 @@ const getPacienteByCpf = async (cpf) => {
 
 const createCadastroPaciente = async (first_name, birth_date, address, phone, cpf, tipo_deficiencia, email, password) => {
     try {
-        const [query] = await connection.execute('INSERT INTO cadastrarpaciente (first_name, birth_date, address, phone, cpf, tipo_deficiencia, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [first_name, birth_date, address, phone, cpf, tipo_deficiencia, email, password]);
+        const [query] = await connection.execute('INSERT INTO cadastropaciente (first_name, birth_date, address, phone, cpf, tipo_deficiencia, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [first_name, birth_date, address, phone, cpf, tipo_deficiencia, email, password]);
         return { id: query.insertId, first_name, birth_date, address, phone, cpf, tipo_deficiencia, email, password };
     } catch (error) {
         throw new Error('Erro ao criar cadastro de paciente');
@@ -82,7 +82,7 @@ const createCadastroPaciente = async (first_name, birth_date, address, phone, cp
 
 const getAllCadastroPaciente = async () => {
     try {
-        const [query] = await connection.execute('SELECT * FROM cadastrarpaciente');
+        const [query] = await connection.execute('SELECT * FROM cadastropaciente');
         return query;
     } catch (error) {
         throw new Error('Erro ao buscar cadastros de pacientes');
@@ -91,7 +91,7 @@ const getAllCadastroPaciente = async () => {
 
 const getCadastroPacienteById = async (id) => {
     try {
-        const [query] = await connection.execute('SELECT * FROM cadastrarpaciente WHERE id = ?', [id]);
+        const [query] = await connection.execute('SELECT * FROM cadastropaciente WHERE id = ?', [id]);
         return query[0];
     } catch (error) {
         throw new Error('Erro ao buscar cadastro de paciente pelo ID');
@@ -104,7 +104,7 @@ const updateCadastroPaciente = async (id, first_name, birth_date, address, phone
         if (!item) {
             return null;
         }
-        const [query] = await connection.execute('UPDATE cadastrarpaciente SET first_name = ?, birth_date = ?, address = ?, phone = ?, cpf = ?, tipo_deficiencia = ?, email = ?, password = ? WHERE id = ?', [first_name, birth_date, address, phone, cpf, tipo_deficiencia, email, password, id]);
+        const [query] = await connection.execute('UPDATE cadastropaciente SET first_name = ?, birth_date = ?, address = ?, phone = ?, cpf = ?, tipo_deficiencia = ?, email = ?, password = ? WHERE id = ?', [first_name, birth_date, address, phone, cpf, tipo_deficiencia, email, password, id]);
         return query;
     } catch (error) {
         throw new Error('Erro ao atualizar cadastro de paciente');
@@ -117,7 +117,7 @@ const deleteCadastroPaciente = async (id) => {
         if (!item) {
             return null;
         }
-        await connection.execute('DELETE FROM cadastrarpaciente WHERE id = ?', [id]);
+        await connection.execute('DELETE FROM cadastropaciente WHERE id = ?', [id]);
         return { message: 'Cadastro deletado com sucesso' };
     } catch (error) {
         throw new Error('Erro ao deletar cadastro de paciente');
