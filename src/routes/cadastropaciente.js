@@ -3,9 +3,9 @@ const querys = require('../querys');
 const router = Router();
 
 router.post('/', async (req, res) => {
-  const { nome, dataNascimento, endereco, telefone, cpf, tipoDeficiencia, nomeResponsavel, email, password } = req.body;
+  const { nome, dataNascimento, endereco, telefone, cpf, tipoDeficiencia, nome_responsavel, email, password } = req.body;
   try {
-    const query = await querys.createCadastroPaciente(nome, dataNascimento, endereco, telefone, cpf, tipoDeficiencia, nomeResponsavel, email, password);
+    const query = await querys.createCadastroPaciente(nome, dataNascimento, endereco, telefone, cpf, tipoDeficiencia, nome_responsavel, email, password);
     return res.status(201).json({ message: 'Paciente cadastrado com sucesso', id: query.insertId });
   } catch (error) {
     return res.status(500).json({ message: 'Erro ao cadastrar paciente', error: error.message });
@@ -36,9 +36,9 @@ router.get('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { nome, dataNascimento, endereco, telefone, cpf, tipoDeficiencia, nomeResponsavel, email, password } = req.body;
+  const { nome, dataNascimento, endereco, telefone, cpf, tipoDeficiencia, nome_responsavel, email, password } = req.body;
   try {
-    const query = await querys.updateCadastroPaciente(id, nome, dataNascimento, endereco, telefone, cpf, tipoDeficiencia, nomeResponsavel, email, password);
+    const query = await querys.updateCadastroPaciente(id, nome, dataNascimento, endereco, telefone, cpf, tipoDeficiencia, nome_responsavel, email, password);
     if (!query) {
       return res.status(404).json({ message: 'Paciente não encontrado' });
     }
